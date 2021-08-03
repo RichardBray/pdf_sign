@@ -1,0 +1,6 @@
+dist
+exports
+resources
+node_modules
+.DS_Store
+NOTES.md
