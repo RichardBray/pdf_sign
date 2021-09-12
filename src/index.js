@@ -8,8 +8,8 @@ async function main() {
   );
 
   const signedDocs = await pdfBuffer.signPDF();
-  const randomFourDigitNumber = Math.floor(Math.random() * 5000);
-  const pdfName = `./exports/any_name_you_want_${randomFourDigitNumber}.pdf`;
+  const randomNumber = Math.floor(Math.random() * 5000);
+  const pdfName = `./exports/exported_file_${randomNumber}.pdf`;
 
   fs.writeFileSync(pdfName, signedDocs);
   console.log(`New Signed PDF created called: ${pdfName}`);
