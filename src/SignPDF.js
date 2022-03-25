@@ -6,11 +6,15 @@ import {
   PDFString,
 } from "pdf-lib";
 import signer from "node-signpdf";
-import fs from "fs";
+import fs from "node:fs";
 
-import PDFArrayCustom from "./PDFArrayCustom";
+import PDFArrayCustom from "./PDFArrayCustom.js";
 
 export default class SignPDF {
+  /**
+   * @param {string} pdfFile
+   * @param {string} certFile
+   */
   constructor(pdfFile, certFile) {
     this.pdfDoc = fs.readFileSync(pdfFile);
     this.certificate = fs.readFileSync(certFile);
@@ -20,17 +24,17 @@ export default class SignPDF {
    * @return Promise<Buffer>
    */
   async signPDF() {
-    let newPDF = await this._addPlaceholder();
-    newPDF = signer.sign(newPDF, this.certificate);
+    let newPDF = await this.#addPlaceholder();
+    newPDF = signer.default.sign(newPDF, this.certificate);
 
     return newPDF;
   }
 
   /**
    * @see https://github.com/Hopding/pdf-lib/issues/112#issuecomment-569085380
-   * @returns {Promise<Buffer>}
+   * @return Promise<Buffer>
    */
-  async _addPlaceholder() {
+  async #addPlaceholder() {
     const loadedPdf = await PDFDocument.load(this.pdfDoc);
     const ByteRange = PDFArrayCustom.withContext(loadedPdf.context);
     const DEFAULT_BYTE_RANGE_PLACEHOLDER = '**********';
@@ -49,7 +53,7 @@ export default class SignPDF {
       ByteRange,
       Contents: PDFHexString.of('A'.repeat(SIGNATURE_LENGTH)),
       Reason: PDFString.of('We need your signature for reasons...'),
-      M: PDFString.fromDate(Date.now()),
+      M: PDFString.fromDate(new Date()),
     });
 
     const signatureDictRef = loadedPdf.context.register(signatureDict);
