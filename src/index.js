@@ -1,10 +1,11 @@
 import SignPDF from "./SignPDF";
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 
 async function main() {
   const pdfBuffer = new SignPDF(
-    'absolute_path_of_pdf_you_want_to_sign_goes_here',
-    'absolute_path_of_p12_certificate_goes_here'
+    path.resolve('test_assets/minions.pdf'),
+    path.resolve('test_assets/certificate.p12')
   );
 
   const signedDocs = await pdfBuffer.signPDF();

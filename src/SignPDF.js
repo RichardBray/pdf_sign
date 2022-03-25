@@ -6,7 +6,7 @@ import {
   PDFString,
 } from "pdf-lib";
 import signer from "node-signpdf";
-import fs from "fs";
+import fs from "node:fs";
 
 import PDFArrayCustom from "./PDFArrayCustom";
 
@@ -49,7 +49,7 @@ export default class SignPDF {
       ByteRange,
       Contents: PDFHexString.of('A'.repeat(SIGNATURE_LENGTH)),
       Reason: PDFString.of('We need your signature for reasons...'),
-      M: PDFString.fromDate(Date.now()),
+      M: PDFString.fromDate(new Date()),
     });
 
     const signatureDictRef = loadedPdf.context.register(signatureDict);
